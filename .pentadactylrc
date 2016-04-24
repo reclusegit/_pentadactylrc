@@ -1,0 +1,118 @@
+"我的firefox插件vimperator配置文件
+"建立的方法有两种
+"第一种是先用 :set 命令对各项设置进行设定
+"然后运行 :mkv 命令来自动生成配置文件
+"第二种是自己建立
+"Ubuntu下在~/.vimperatorrc
+"Windows下在C:\Users\name\_vimperatorrc
+
+":colorscheme vimium
+":colorscheme desert 
+" 更改Hints等UI显示，也可指定colors内的主题，而不用写进这里
+highlight -link=FontFixed CmdLine font-family: "Lucida Grande", "Fixedsys", "Sans"; font-size: 13px;
+highlight CompDesc padding-left: 6px;
+highlight CompIcon display: none;
+highlight CompItem[selected] background: #FFC542 !important;
+highlight CompTitle text-transform: uppercase; background: -moz-linear-gradient(top, #FFF785, #FFC542); font-size: 11px; padding: 1px 3px 0px 3px; font-family : "Helvetica Neue", "Helvetica", "Arial", "Sans"; font-weight: bold; color: #302505;
+highlight CompTitleSep height: 1px; background: #C38A22;
+highlight ErrorMsg background: #a00 !important; color: #fff !important; font: 11px "Menlo" !important; padding: 2px 4px !important;
+highlight Hint text-transform: uppercase; font-family : "Helvetica Neue", "Helvetica", "Arial", "Sans"; font-weight: bold; font-size: 12px; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6); color: #302505; padding: 1px 3px 0px 3px; background: -moz-linear-gradient(top, #FFF785, #FFC542); border: 1px #C38A22 solid; -moz-border-radius: 3px; -moz-box-shadow: 0 3px 7px 0px rgba(0,0,0,0.3);
+highlight HintActive background-color: inherit !important
+highlight HintElem background-color: inherit !important
+highlight HintImage opacity: .5 !important;
+highlight Normal background-color: #FFF; color: black; font-family: "Lucida Grande", "Arial", "Sans"; font-size: 12px;
+highlight WarningMsg background: #a00 !important; color: #fff !important; font: 11px "Menlo" !important; padding: 2px 4px !important;
+ 
+" 修改UI，增加了标签图标上标序号，隐藏Pentadactyl状态栏；链接信息在命令行显示
+set guioptions=brNsCT
+"brTNs
+"set showstatuslinks=command
+set complete=location,file
+
+" 查找高亮所有
+set hlfind
+ 
+" 增强内置的 ]] 和 [[ 的翻页
+set nextpattern^=\s*(下一页|下一章|下一张|下一篇|下页|后页)\s*
+set previouspattern^=\s*(上一页|上一章|上一张|上一篇|上页|前页)\s* 
+
+"map -modes=n j -builtin 10j
+"map -modes=n k -builtin 10k
+map -modes=n j -builtin 15<down>
+map -modes=n k -builtin 15<up>
+
+map -modes=n,v ; -builtin F
+
+map -modes=n,v = -builtin <c-=>
+
+"让某些快捷键失效，这些键不习惯而且用的少
+map A <Nop>
+map a <Nop>
+map <C-o> <Nop>
+map <C-i> <Nop>
+
+" 显隐导航栏
+map x :set go!=B<CR>
+
+" 停止刷新
+map -modes=n s -builtin <count>:stop<Return>
+
+"后退前进
+"map -modes=n H -builtin <C-o>
+"map -modes=n L -builtin <C-i>
+map -modes=n w -builtin <count>H
+map -modes=n e -builtin <count>L
+
+"前后标签
+"map J gT
+"map K gt
+map -modes=n l -builtin <count><C-n>
+map -modes=n h -builtin <count><C-p>
+
+"在新窗口打开主页(当前窗口打开主页是gh)
+map gy gH
+map -modes=n t -builtin gH<Return>
+
+
+"插入模式下按 jj 键退出 Esc
+imap jj <Esc>
+imap kk <Esc>
+
+"将某些常用键由firefox接管
+map -m n,v,i,c,t <C-a> <Pass>
+map -m n,v,i,c,t <C-c> <Pass>
+map -m i,c,t <C-v> <Pass>
+map -m i,c,t <C-x> <Pass>
+map -m i,c,t <C-z> <Pass>
+map -m n,v,i,c,t <C-d> <Pass>
+map -m n,v,i,c,t <C-f> <Pass>
+map -m n,v,i,c,t <C-t> <Pass>
+map -m n,v,i,c,t <C-w> <Pass>
+
+"当连接或文字被选择时，按 t 或 o 进行直接搜索
+map t -js str=util.domToString(buffer.focusedFrame.getSelection()); str!=""?dactyl.open(str, {where: dactyl.NEW_TAB}):CommandExMode().open("tabopen ")
+map o -js str=util.domToString(buffer.focusedFrame.getSelection()); str!=""?dactyl.open(str, {where: dactyl.CURRENT_TAB}):CommandExMode().open("open ") 
+
+"自定义 hint keys
+:set hintkeys=asdfjklgheruio
+:set hinttimeout=600
+":hi Hint font:bold 15px "Droid Sans Mono", monospace !important; margin:-.2ex; padding: 0 0 0 1px; outline:1px solid rgba(0, 0, 0, .5); background:rgba(255,248,231,.8); color:black; text-transform:uppercase;
+
+" 保证进入命令行时输入法是disable的，这样方便输入命令
+style chrome://* #dactyl-commandline-command input {ime-mode: inactive;}
+style chrome://* #dactyl-statusline-field-commandline-command input {ime-mode: inactive;}
+
+" 用IE打开
+"map ie :js io.run("c:\\Program Files (x86)\\internet explorer\\iexplore.exe", [buffer.URL])<CR>
+
+" 列出页面跳转历史列表
+map Z :jump<CR>
+
+" 新标签查看源代码
+map gf :tab viewsource<CR>
+ 
+" 内置的扩展管理
+map a :addons<CR>
+
+" 打开Firefox选项
+map -modes=n,v,i <C-F12> :prefs<CR>
